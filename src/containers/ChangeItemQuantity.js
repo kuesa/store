@@ -5,12 +5,13 @@ import { changeQuantity, removeItem } from '../actions/actions';
 import { InputNumber } from 'antd';
 
 let ChangeItemQuantity = (props) => {
-    return(
+    return (
         <div>
-            <InputNumber min={0} value={props.qty} onChange={ value => {
-                if(value > 0) {
+            <InputNumber min={0} value={props.qty} onChange={value => {
+                if (value > 0) {
                     props.dispatch(changeQuantity(props.sku, value));
                 } else {
+                    console.log(value)
                     props.dispatch(removeItem(props.sku));
                 }
             }}

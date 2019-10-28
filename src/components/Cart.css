@@ -1,0 +1,13 @@
+.cartItem {
+    margin: 20px 12.5% 0;
+    padding: 0 24px;
+}
+
+#title {
+    text-align: center;
+    margin: 20px
+}
+
+.ant-input-number {
+    width: 60px;
+}

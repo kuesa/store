@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import  { Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
 import { PersistGate } from 'redux-persist/integration/react';
@@ -15,13 +15,13 @@ import cart from './reducers/cart';
 const persistConfig = {
     key: 'root',
     storage,
-  }
-   
+}
+
 const persistedReducer = persistReducer(persistConfig, cart);
 const store = createStore(persistedReducer, window.STATE_FROM_SERVER);
 const persistor = persistStore(store);
 
-store.subscribe(() => console.log(store.getState()));
+//store.subscribe(() => console.log(store.getState()));
 
 //unsubscribe();
 
@@ -30,7 +30,7 @@ ReactDOM.render(
         <PersistGate loading={null} persistor={persistor}>
             <App />
         </PersistGate>
-    </Provider>, 
+    </Provider>,
     document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

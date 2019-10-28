@@ -42,3 +42,14 @@
     vertical-align: bottom;
     font-size: 14px;
 }
+
+@media only screen and (max-width: 750px) {
+    #logo {
+        display: none;
+    }
+
+    #header {
+        margin: 0;
+        padding: 0;
+    }
+}

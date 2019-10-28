@@ -2,15 +2,15 @@ import React from 'react';
 import AddItem from '../containers/AddItem';
 
 class Home extends React.Component {
-    render(){
-        return(
+    render() {
+        return (
             <>
                 <h1>Hello, World! (Home)</h1>
-                <AddItem sku={1} />
+                <AddItem sku={120} />
                 <br />
-                <AddItem sku={2} />
+                <AddItem sku={101} />
                 <br />
-                <AddItem sku={3} />
+                <AddItem sku={220} />
             </>
         );
     }
