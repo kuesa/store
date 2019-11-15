@@ -1,22 +1,26 @@
 import React from 'react';
-import { CardElement, injectStripe } from 'react-stripe-elements';
+import { injectStripe } from 'react-stripe-elements';
 
-import { Row, Col, Steps, Button } from 'antd';
+import { Row, Col, Steps, Button, Form } from 'antd';
+
+import Shipping from './checkout_steps/Shipping';
+import Billing from './checkout_steps/Billing';
+import Summary from './checkout_steps/Summary';
 
 import './CheckoutForm.css';
 
 const steps = [
     {
         title: 'Shipping',
-        content: 'Shipping Address'
+        content: <Shipping />
     },
     {
         title: 'Billing',
-        content: 'Billing Address'
+        content: <Billing />
     },
     {
         title: 'Confirm',
-        content: 'Confirm your Order'
+        content: <Summary />
     }
 ]
 
@@ -61,6 +65,17 @@ class CheckoutForm extends React.Component {
     }
 
     render() {
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24 },
+                sm: { span: 8 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 16 },
+            },
+        };
+
         return (
             <>
                 <Row>
@@ -76,7 +91,26 @@ class CheckoutForm extends React.Component {
                                 })
                             }
                         </Steps>
-                        <CardElement />
+                        <Form {...formItemLayout} onSubmit={this.submit}>
+                            <div className="steps-content">{steps[this.state.current].content}</div>
+                            <div className="steps-action">
+                                {this.state.current < steps.length - 1 && (
+                                    <Button type="primary" onClick={() => this.next()}>
+                                        Next
+                                    </Button>
+                                )}
+                                {this.state.current === steps.length - 1 && (
+                                    <Button type="primary" htmlType="submit">
+                                        Place Order
+                                    </Button>
+                                )}
+                                {this.state.current > 0 && (
+                                    <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+                                        Previous
+                                    </Button>
+                                )}
+                            </div>
+                        </Form>
                     </Col>
                     <Col span={8} />
                 </Row>

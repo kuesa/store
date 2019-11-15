@@ -1,7 +1,7 @@
 import React from 'react';
 import CartItem from './CartItem';
 
-import { Row, Col, Divider } from 'antd';
+import { Row, Col, Divider, Button } from 'antd';
 
 import './Cart.css';
 
