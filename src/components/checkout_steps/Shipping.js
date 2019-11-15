@@ -9,7 +9,7 @@ class Shipping extends React.Component {
 
         return (
             <Form.Item label='Name'>
-                <Input />
+                <Input name='name' />
             </Form.Item>
         );
     }

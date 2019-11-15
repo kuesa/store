@@ -30,8 +30,11 @@ class CheckoutForm extends React.Component {
 
         this.state = {
             purchase_complete: false,
-            current: 0
+            current: 0,
+            items: [...this.props.items.map(item => item.sku)]
         };
+
+        console.log(this.props.items[0]);
 
         this.submit = this.submit.bind(this);
     }
@@ -39,11 +42,20 @@ class CheckoutForm extends React.Component {
     async submit(ev) {
         ev.preventDefault();
 
-        let { token } = await this.props.stripe.createToken({ name: "Noah Grove" });
+        let target = ev.target;
+
+        let { token } = await this.props.stripe.createToken({ name: target.name.value });
+
+        let resp_body = {
+            token: token.id,
+            name: target.name.value,
+            items: this.state.items
+        }
+
         let response = await fetch('/charge', {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: token.id
+            body: JSON.stringify(resp_body)
         });
 
         if (response.ok) {
@@ -92,7 +104,17 @@ class CheckoutForm extends React.Component {
                             }
                         </Steps>
                         <Form {...formItemLayout} onSubmit={this.submit}>
-                            <div className="steps-content">{steps[this.state.current].content}</div>
+                            <div className="steps-content">
+                                {steps.map(({ title, content }, i) => (
+                                    <div
+                                        key={title}
+                                        className={i === this.state.current ? 'form-cont fade-in' : 'form-cont'}
+                                    >
+                                        {content}
+                                    </div>
+                                ))
+                                }
+                            </div>
                             <div className="steps-action">
                                 {this.state.current < steps.length - 1 && (
                                     <Button type="primary" onClick={() => this.next()}>
