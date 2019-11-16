@@ -9,21 +9,6 @@ import Summary from './checkout_steps/Summary';
 
 import './CheckoutForm.css';
 
-const steps = [
-    {
-        title: 'Shipping',
-        content: <Shipping />
-    },
-    {
-        title: 'Billing',
-        content: <Billing />
-    },
-    {
-        title: 'Confirm',
-        content: <Summary />
-    }
-]
-
 class CheckoutForm extends React.Component {
     constructor(props) {
         super(props);
@@ -33,8 +18,6 @@ class CheckoutForm extends React.Component {
             current: 0,
             items: [...this.props.items.map(item => item.sku)]
         };
-
-        console.log(this.props.items[0]);
 
         this.submit = this.submit.bind(this);
     }
@@ -77,6 +60,21 @@ class CheckoutForm extends React.Component {
     }
 
     render() {
+        const steps = [
+            {
+                title: 'Shipping',
+                content: <Shipping />
+            },
+            {
+                title: 'Billing',
+                content: <Billing />
+            },
+            {
+                title: 'Confirm',
+                content: <Summary items={this.props.items} />
+            }
+        ]
+
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -94,45 +92,47 @@ class CheckoutForm extends React.Component {
                     <Col span={8} />
                     <Col span={8}>
                         <h1>Checkout</h1>
-                        <Steps current={this.state.current}>
-                            {
-                                steps.map(item => {
-                                    return (
-                                        <Steps.Step key={item.title} title={item.title} />
-                                    )
-                                })
-                            }
-                        </Steps>
-                        <Form {...formItemLayout} onSubmit={this.submit}>
-                            <div className="steps-content">
-                                {steps.map(({ title, content }, i) => (
-                                    <div
-                                        key={title}
-                                        className={i === this.state.current ? 'form-cont fade-in' : 'form-cont'}
-                                    >
-                                        {content}
-                                    </div>
-                                ))
+                        <div style={{ margin: '40px 12.5% 50px', textAlign: 'center' }}>
+                            <Steps current={this.state.current}>
+                                {
+                                    steps.map(item => {
+                                        return (
+                                            <Steps.Step key={item.title} title={item.title} />
+                                        )
+                                    })
                                 }
-                            </div>
-                            <div className="steps-action">
-                                {this.state.current < steps.length - 1 && (
-                                    <Button type="primary" onClick={() => this.next()}>
-                                        Next
-                                    </Button>
-                                )}
-                                {this.state.current === steps.length - 1 && (
-                                    <Button type="primary" htmlType="submit">
-                                        Place Order
-                                    </Button>
-                                )}
-                                {this.state.current > 0 && (
-                                    <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                                        Previous
-                                    </Button>
-                                )}
-                            </div>
-                        </Form>
+                            </Steps>
+                            <Form {...formItemLayout} onSubmit={this.submit}>
+                                <div className="steps-content" style={{ margin: '40px 0' }}>
+                                    {steps.map(({ title, content }, i) => (
+                                        <div
+                                            key={title}
+                                            className={i === this.state.current ? 'form-cont fade-in' : 'form-cont'}
+                                        >
+                                            {content}
+                                        </div>
+                                    ))
+                                    }
+                                </div>
+                                <div className="steps-action">
+                                    {this.state.current < steps.length - 1 && (
+                                        <Button type="primary" onClick={() => this.next()}>
+                                            Next
+                                        </Button>
+                                    )}
+                                    {this.state.current === steps.length - 1 && (
+                                        <Button type="primary" htmlType="submit">
+                                            Place Order
+                                        </Button>
+                                    )}
+                                    {this.state.current > 0 && (
+                                        <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+                                            Previous
+                                        </Button>
+                                    )}
+                                </div>
+                            </Form>
+                        </div>
                     </Col>
                     <Col span={8} />
                 </Row>

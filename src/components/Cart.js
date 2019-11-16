@@ -1,5 +1,6 @@
 import React from 'react';
 import CartItem from './CartItem';
+import { withRouter } from 'react-router-dom';
 
 import { Row, Col, Divider, Button } from 'antd';
 
@@ -14,6 +15,10 @@ import './Cart.css';
 
 
 class Cart extends React.Component {
+
+    handleClick = () => {
+        this.props.history.push('/checkout');
+    }
 
     render() {
         return (
@@ -35,9 +40,12 @@ class Cart extends React.Component {
                         )
                     })
                 }
+                <div style={{ textAlign: 'center' }}>
+                    <Button type='primary' onClick={this.handleClick}>Checkout</Button>
+                </div>
             </>
         );
     }
 }
 
-export default Cart;
+export default withRouter(Cart);

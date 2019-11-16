@@ -1,9 +1,15 @@
 import React from 'react';
 
+import SummaryItem from './SummaryItem';
+
 class Summary extends React.Component {
+    
+
     render() {
         return (
-            <h1>Confirm</h1>
+            <>
+                {this.props.items.map(item => (<SummaryItem sku={item.sku} qty={item.qty} />))}
+            </>
         );
     }
 }
