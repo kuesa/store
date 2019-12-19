@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { Typography } from 'antd';
+
+const { Title, Text } = Typography;
+
 class SummaryItem extends React.Component {
     constructor(props) {
         super(props);
@@ -14,7 +18,7 @@ class SummaryItem extends React.Component {
             subtotal: 0
         }
     }
-    
+
     componentDidMount = () => {
         fetch('/sku/' + this.props.sku)
             .then(response => response.json())
@@ -28,12 +32,19 @@ class SummaryItem extends React.Component {
                     modifier: item.item.modifiers[item.modifier],
                     subtotal: item.item.base_price + item.item.modifiers[item.modifier].price
                 });
+
+                this.props.addFunc(item.item.base_price + item.item.modifiers[item.modifier].price);
             });
     }
 
     render() {
-        return(
-            <h2>{`${this.props.qty}x ${this.state.modifier.name} ${this.state.name} (${this.state.wood})`}</h2>
+        return (
+            <>
+                <Title level={4} style={{ display: 'inline-block', marginRight: '1.5rem' }}>{`${this.props.qty}x ${this.state.modifier.name} ${this.state.name} (${this.state.wood}):`}</Title>
+                <Title level={4} style={{ display: 'inline-block' }}>
+                    <Text strong>{`$${this.state.subtotal}.00`}</Text>
+                </Title>
+            </>
         );
     }
 }
