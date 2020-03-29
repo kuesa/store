@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, Typography } from 'antd';
+import { Divider, Typography, Row, Col } from 'antd';
 
 import SummaryItem from './SummaryItem';
 
@@ -25,17 +25,29 @@ class Summary extends React.Component {
     render() {
         return (
             <div style={{ textAlign: 'right' }}>
-                {this.props.items.map(item => (<SummaryItem key={item.sku} sku={item.sku} qty={item.qty} addFunc={this.addToTotal} />))}
-                <p />
-                <Title level={4} style={{ display: 'inline-block', marginRight: '1.5rem' }}>{`Shipping:`}</Title>
-                <Title level={4} style={{ display: 'inline-block' }}>
-                    <Text strong>{`$5.00`}</Text>
-                </Title>
+                {this.props.items.map(item => (<SummaryItem key={item.sku}
+                    sku={item.sku} qty={item.qty} addFunc={this.addToTotal} />))}
+                <Row justify='end' gutter={32}>
+                    <Col>
+                        <Title level={4}>{`Shipping:`}</Title>
+                    </Col>
+                    <Col>
+                        <Title level={4}>
+                            <Text strong>{`$5.00`}</Text>
+                        </Title>
+                    </Col>
+                </Row>
                 <Divider />
-                <Title level={4} style={{ display: 'inline-block', marginRight: '1.5rem' }}>{`Total:`}</Title>
-                <Title level={4} style={{ display: 'inline-block' }}>
-                    <Text strong>{`$${this.state.total}.00`}</Text>
-                </Title>
+                <Row justify='end' gutter={32}>
+                    <Col>
+                        <Title level={4}>{`Total:`}</Title>
+                    </Col>
+                    <Col>
+                        <Title level={4} >
+                            <Text strong>{`$${this.state.total}.00`}</Text>
+                        </Title>
+                    </Col>
+                </Row>
             </div>
         );
     }

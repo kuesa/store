@@ -24,21 +24,23 @@ app.post("/checkout", async (req, res) => {
 
     let total = 0;
 
-    if (body.items.length === 1) {
-        total = item_sheet[parseInt(body.items[0][0])].base_price + item_sheet[parseInt(body.items[0][0])].modifiers[parseInt(body.items[0][2])].price
-    } else {
-        total = body.items.reduce((a, b) => (
-            item_sheet[parseInt(a[0])].base_price + item_sheet[parseInt(a[0])].modifiers[parseInt(a[2])].price
-            + item_sheet[parseInt(b[0])].base_price + item_sheet[parseInt(b[0])].modifiers[parseInt(b[2])].price));
+    for (item of body.items) {
+        total +=
+            (item_sheet[parseInt(item.sku[0])].base_price +
+                item_sheet[parseInt(item.sku[0])].
+                    modifiers[parseInt(item.sku[2])].price) * item.qty;
     }
+
     let desc = '';
     for (item of body.items) {
-        desc += wood_types[parseInt(item[1])] + ' ' +
-            item_sheet[parseInt(item[0])].name + ', ';
+        desc += item.qty + 'x ' + wood_types[parseInt(item.sku[1])] + ' ' +
+            item_sheet[parseInt(item.sku[0])].name + ', ';
     }
+    desc = desc.substr(0, desc.length - 2);
     let paymentIntent = await stripe.paymentIntents.create({
         amount: (total + 5) * 100,
         currency: 'usd',
+        description: desc,
         metadata: { description: desc }
     });
 

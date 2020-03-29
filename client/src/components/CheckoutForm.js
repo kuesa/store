@@ -1,7 +1,8 @@
 import React from 'react';
 import { CardElement } from '@stripe/react-stripe-js';
 
-import { Row, Col, Steps, Button, Form } from 'antd';
+import { Row, Col, Steps, Button, Form, Result, Spin } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import Shipping from './checkout_steps/Shipping';
 import Billing from './checkout_steps/Billing';
@@ -13,10 +14,13 @@ class CheckoutForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            purchase_complete: false,
+            purchaseComplete: false,
+            loading: false,
             current: 0,
             items: [...this.props.items.map(item => item.sku)],
-            secret: ''
+            secret: '',
+            error: false,
+            errorMsg: ''
         };
 
         this.submit = this.submit.bind(this);
@@ -26,7 +30,7 @@ class CheckoutForm extends React.Component {
         fetch(`${process.env.REACT_APP_API}/checkout`, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ items: this.state.items })
+            body: JSON.stringify({ items: this.props.items })
         }).then(response => response.json())
             .then(data => {
                 this.setState({ secret: data.secret })
@@ -36,6 +40,8 @@ class CheckoutForm extends React.Component {
 
     async submit(ev) {
         let values = ev;
+
+        this.setState({ loading: true });
 
         const { stripe, elements } = this.props;
 
@@ -77,11 +83,10 @@ class CheckoutForm extends React.Component {
 
         if (error) {
             console.log('[error]', error);
+            this.setState({ error: true, loading: false, errorMsg: error.message });
         } else {
             if (paymentIntent.status === 'succeeded') {
-                this.setState({
-                    purchaseComplete: true
-                });
+                this.setState({ purchaseComplete: true, loading: false });
             }
         };
     }
@@ -127,64 +132,97 @@ class CheckoutForm extends React.Component {
 
         return (
             <>
-                <Row>
-                    <Col span={8} />
-                    <Col span={8}>
-                        <h1>Checkout</h1>
-                        <div style={{ margin: '40px 12.5% 50px', textAlign: 'center' }}>
-                            <Steps current={this.state.current}>
-                                {
-                                    steps.map(item => {
-                                        return (
-                                            <Steps.Step key={item.title} title={item.title} />
-                                        )
-                                    })
-                                }
-                            </Steps>
-                            <Form
-                                {...formItemLayout}
-                                onFinish={this.submit}
-                            >
-                                <div className="steps-content" style={{ margin: '40px 0' }}>
-                                    {steps.map(({ title, content }, i) => (
-                                        <div
-                                            key={title}
-                                            className={i === this.state.current ? 'form-cont fade-in' : 'form-cont'}
-                                        >
-                                            {content}
+                {this.state.purchaseComplete === false &&
+                    this.state.error === false ?
+                    <Row>
+                        <Col span={8} />
+                        <Col span={8}>
+                            <h1>Checkout</h1>
+                            <div style={{ margin: '40px 12.5% 50px', textAlign: 'center' }}>
+                                <Spin
+                                    spinning={this.state.loading} tip="Processing...">
+                                    <Steps current={this.state.current}>
+                                        {
+                                            steps.map(item => {
+                                                return (
+                                                    <Steps.Step key={item.title} title={item.title} />
+                                                )
+                                            })
+                                        }
+                                    </Steps>
+                                    <Form
+                                        {...formItemLayout}
+                                        onFinish={this.submit}
+                                    >
+                                        <div className="steps-content" style={{ margin: '40px 0' }}>
+                                            {steps.map(({ title, content }, i) => (
+                                                <div
+                                                    key={title}
+                                                    className={i === this.state.current ? 'form-cont fade-in' : 'form-cont'}
+                                                >
+                                                    {content}
+                                                </div>
+                                            ))
+                                            }
                                         </div>
-                                    ))
-                                    }
-                                </div>
-                                <div className="steps-action">
-                                    {this.state.current < steps.length - 1 && (
-                                        <Button type="primary" onClick={() => this.next()}>
-                                            Next
-                                        </Button>
-                                    )}
-                                    {this.state.current === steps.length - 1 && (
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            disabled={!stripe}
-                                        >
-                                            Place Order
-                                        </Button>
-                                    )}
-                                    {this.state.current > 0 && (
-                                        <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                                            Previous
-                                        </Button>
-                                    )}
-                                </div>
-                            </Form>
-                        </div>
-                    </Col>
-                    <Col span={8} />
-                </Row>
+                                        <div className="steps-action">
+                                            {this.state.current < steps.length - 1 && (
+                                                <Button type="primary" onClick={() => this.next()}>
+                                                    Next
+                                                </Button>
+                                            )}
+                                            {this.state.current === steps.length - 1 && (
+                                                <Button
+                                                    type="primary"
+                                                    htmlType="submit"
+                                                    disabled={!stripe}
+                                                >
+                                                    Place Order
+                                                </Button>
+                                            )}
+                                            {this.state.current > 0 && (
+                                                <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+                                                    Previous
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </Form>
+                                </Spin>
+                            </div>
+                        </Col>
+                        <Col span={8} />
+                    </Row>
+                    : null
+                }
+                {this.state.purchaseComplete && !this.state.loading ?
+                    <Result
+                        status='success'
+                        title='Purchase Complete!'
+                        subTitle='You will receive a personal email once your order enters production.'
+                        extra={
+                            <Button
+                                onClick={() => this.props.history.push('/')}>
+                                Back
+                            </Button>
+                        }
+                    /> : null
+                }
+                {this.state.error && !this.state.loading ?
+                    <Result
+                        status='error'
+                        title='Purchase Failed.'
+                        subTitle={this.state.errorMsg}
+                        extra={
+                            <Button
+                                onClick={() => this.props.history.push('/')}>
+                                Back
+                            </Button>
+                        }
+                    /> : null
+                }
             </>
         );
     }
 }
 
-export default CheckoutForm;
+export default withRouter(CheckoutForm);

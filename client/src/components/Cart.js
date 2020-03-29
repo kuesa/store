@@ -24,7 +24,7 @@ class Cart extends React.Component {
         return (
             <>
                 <h1 id='title'>Shopping Cart</h1>
-                <div style={{ margin: '40px 12.5% 50px', textAlign: 'center' }}>
+                <div style={{ margin: '40px 12.5% 25px', textAlign: 'center' }}>
                     <Row>
                         <Col span={4}>Item</Col>
                         <Col span={13}>Price</Col>

@@ -14,7 +14,7 @@ class Home extends React.Component {
                         <Link to='/pens/fountain'>
                             <Card
                                 hoverable
-                                style={{ width: 240 }}
+                                style={{ width: '85%' }}
                                 cover={
                                     <img
                                         alt='Pen'
@@ -30,7 +30,7 @@ class Home extends React.Component {
                         <Link to='/pens/rollerball'>
                             <Card
                                 hoverable
-                                style={{ width: 240 }}
+                                style={{ width: '85%' }}
                                 cover={
                                     <img
                                         alt='Pen'
