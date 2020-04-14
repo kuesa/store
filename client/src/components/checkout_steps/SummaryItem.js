@@ -14,6 +14,7 @@ class SummaryItem extends React.Component {
             description: 'Loading...',
             base_price: 'Loading...',
             wood: 'Loading...',
+            printName: '',
             modifier: { 'Loading...': 0 },
             subtotal: 0
         }
@@ -29,8 +30,9 @@ class SummaryItem extends React.Component {
                     description: item.item.description,
                     base_price: item.item.base_price,
                     wood: item.wood,
-                    modifier: item.item.modifiers[item.modifier],
-                    subtotal: (item.item.base_price + item.item.modifiers[item.modifier].price) * this.props.qty
+                    printName: item.printName,
+                    modifier: item.item.modifiers ? item.item.modifiers[item.modifier] : { name: '' },
+                    subtotal: item.item.base_price + (item.item.modifiers ? item.item.modifiers[item.modifier].price : 0)
                 });
 
                 this.props.addFunc((item.item.base_price + item.item.modifiers[item.modifier].price) * this.props.qty);
@@ -39,12 +41,12 @@ class SummaryItem extends React.Component {
 
     render() {
         return (
-            <Row justify='end' gutter={32} align='middle'>
-                <Col>
-                    <Title level={4} style={{ display: 'inline-block', marginRight: '5%' }}>{`${this.props.qty}x ${this.state.modifier.name} ${this.state.name} (${this.state.wood}):`}</Title>
+            <Row gutter={32} justify='end'>
+                <Col style={{ maxWidth: '70%' }}>
+                    <Title level={4} span={8}>{`${this.props.qty}x ${this.state.modifier.name} ${this.state.name} ${this.state.wood ? '(' + this.state.wood + ')' : ''}${this.state.printName ? '(' + this.state.printName + ')' : ''}`}</Title>
                 </Col>
                 <Col>
-                    <Title level={4} style={{ display: 'inline-block' }}>
+                    <Title level={4} span={4}>
                         <Text strong>{`$${this.state.subtotal}.00`}</Text>
                     </Title>
                 </Col>

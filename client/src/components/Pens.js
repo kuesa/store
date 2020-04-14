@@ -22,7 +22,7 @@ class Home extends React.Component {
                                     />
                                 }
                             >
-                                <Card.Meta title="Fountain Pen" description="$40" />
+                                <Card.Meta title='Fountain Pen' description='$40' />
                             </Card>
                         </Link>
                     </Col>
@@ -38,7 +38,7 @@ class Home extends React.Component {
                                     />
                                 }
                             >
-                                <Card.Meta title="Rollerball Pen" description="$35" />
+                                <Card.Meta title='Rollerball Pen' description='$35' />
                             </Card>
                         </Link>
                     </Col>

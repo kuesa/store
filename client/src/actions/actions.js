@@ -1,4 +1,4 @@
-import { ADD_ITEM, REMOVE_ITEM, CHANGE_QUANTITY } from './actionTypes';
+import { ADD_ITEM, REMOVE_ITEM, CHANGE_QUANTITY, REMOVE_ALL } from './actionTypes';
 
 export function addItem(sku, qty) {
     return {
@@ -21,4 +21,8 @@ export function changeQuantity(sku, qty) {
         sku,
         qty
     };
+}
+
+export function removeAll() {
+    return { type: REMOVE_ALL };
 }

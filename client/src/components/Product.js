@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { Carousel, Skeleton, Select, Row, Col } from 'antd';
 import AddItem from '../containers/AddItem';
@@ -10,20 +11,26 @@ class Product extends React.Component {
 
         this.state = {
             loading: true,
-            name: "Loading...",
-            description: "Loading...",
+            name: 'Loading...',
+            description: 'Loading...',
             base_price: 0,
             modifiers: [],
-            wood_types: [],
+            types: [],
+            typeName: '',
             photos: [],
             selected_modifier: 0,
-            selected_wood: 0,
-            sku: this.props.productId + "00"
+            selected_type: 0,
+            sku: this.props.productId + '00'
         }
     }
 
     componentDidMount = () => {
-        fetch(`${process.env.REACT_APP_API}/items/` + this.props.productId)
+        let product = this.props.productId;
+        if (this.props.match.params.id) {
+            product = Number(product.toString() + this.props.match.params.id);
+            this.setState({ sku: '9' + this.state.selected_type + this.props.match.params.id });
+        }
+        fetch(`${process.env.REACT_APP_API}/items/` + product)
             .then(response => response.json())
             .then(item => {
                 this.setState({
@@ -32,8 +39,9 @@ class Product extends React.Component {
                     description: item.item.description,
                     base_price: item.item.base_price,
                     modifiers: item.item.modifiers,
-                    wood_types: item.wood_types,
-                    photos: item.item.photos
+                    types: item.types,
+                    photos: item.item.photos,
+                    typeName: item.typeName
                 });
             });
     }
@@ -46,10 +54,10 @@ class Product extends React.Component {
         });
     }
 
-    handleChangeWood = e => {
-        let new_sku = this.state.sku[0] + this.state.wood_types.indexOf(e) + this.state.sku[2];
+    handleChangeType = e => {
+        let new_sku = this.state.sku[0] + this.state.types.indexOf(e) + this.state.sku.substr(2);
         this.setState({
-            selected_wood: e,
+            selected_type: e,
             sku: new_sku
         });
     }
@@ -69,10 +77,10 @@ class Product extends React.Component {
                 :
                 <div style={{ marginTop: 40 }}>
                     <Row>
-                        <Col span={7} />
-                        <Col span={4}>
+                        <Col span={4} />
+                        <Col span={7}>
                             <Carousel style={{ width: '100%' }}>
-                                {this.state.photos.map((photo) => <div key={this.state.photos.indexOf(photo)}><img src={photo} style={{ width: '100%' }} alt="Pen" /></div>)}
+                                {this.state.photos.map((photo) => <div key={this.state.photos.indexOf(photo)}><img src={photo} style={{ width: '100%' }} alt='Product' /></div>)}
                             </Carousel>
                         </Col>
                         <Col span={2} />
@@ -80,13 +88,17 @@ class Product extends React.Component {
                             <h1>{this.state.name}</h1>
                             <p>{this.state.description}</p>
                             <h3 style={{ marginTop: '60%' }}>{`$${this.state.base_price}`}</h3>
-                            <Select onSelect={this.handleChangeWood} placeholder="Wood" style={{ width: 110 }}>
-                                {this.state.wood_types.map((wood, idx) => <Select.Option key={idx} value={wood}>{wood}</Select.Option>)}
+                            <Select onSelect={this.handleChangeType} placeholder={this.state.typeName} style={{ width: 110, marginBottom: 12 }}>
+                                {this.state.types.map((type, idx) => <Select.Option key={idx} value={type}>{type}</Select.Option>)}
                             </Select>
-                            <Select onSelect={this.handleChangeModifier} placeholder="Metal" style={{ width: 110, marginBottom: 12 }}>
-                                <Select.Option value="0">Chrome</Select.Option>
-                                <Select.Option value="1">Gold (+$5)</Select.Option>
-                            </Select>
+                            {
+                                this.state.typeName === 'Wood' ?
+                                    <Select onSelect={this.handleChangeModifier} placeholder='Metal' style={{ width: 110, marginBottom: 12 }}>
+                                        <Select.Option value='0'>Chrome</Select.Option>
+                                        <Select.Option value='1'>Gold (+$5)</Select.Option>
+                                    </Select> :
+                                    null
+                            }
                             <AddItem sku={this.state.sku} />
                         </Col>
                         <Col span={7} />
@@ -96,4 +108,4 @@ class Product extends React.Component {
     }
 }
 
-export default Product;
+export default withRouter(Product);

@@ -23,6 +23,7 @@ class CartItem extends React.Component {
             description: 'Loading...',
             base_price: 'Loading...',
             wood: 'Loading...',
+            printName: '',
             modifier: { 'Loading...': 0 },
             subtotal: 0
         }
@@ -38,8 +39,9 @@ class CartItem extends React.Component {
                     description: item.item.description,
                     base_price: item.item.base_price,
                     wood: item.wood,
-                    modifier: item.item.modifiers[item.modifier],
-                    subtotal: item.item.base_price + item.item.modifiers[item.modifier].price
+                    printName: item.printName,
+                    modifier: item.item.modifiers ? item.item.modifiers[item.modifier] : { name: '' },
+                    subtotal: item.item.base_price + (item.item.modifiers ? item.item.modifiers[item.modifier].price : 0)
                 });
             });
     }
@@ -57,7 +59,7 @@ class CartItem extends React.Component {
                         :
                         <>
                             <Row>
-                                <Col style={{ padding: '4px' }} span={10}><h3>{`${this.state.modifier.name} ${this.state.name} (${this.state.wood})`}</h3></Col>
+                                <Col style={{ padding: '4px' }} span={10}><h3>{`${this.state.modifier.name} ${this.state.name} ${this.state.wood ? '(' + this.state.wood + ')' : ''}${this.state.printName ? '(' + this.state.printName + ')' : ''}`}</h3></Col>
                                 <Col style={{ padding: '4px' }} span={3}><h3>{`$${this.state.subtotal}.00`}</h3></Col>
                                 <Col style={{ padding: '4px' }} span={4}><RemoveItem sku={this.props.sku} /></Col>
                                 <Col style={{ padding: '4px' }} span={3}><ChangeItemQuantity sku={this.props.sku} qty={this.props.qty} /></Col>

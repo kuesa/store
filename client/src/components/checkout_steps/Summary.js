@@ -27,8 +27,8 @@ class Summary extends React.Component {
             <div style={{ textAlign: 'right' }}>
                 {this.props.items.map(item => (<SummaryItem key={item.sku}
                     sku={item.sku} qty={item.qty} addFunc={this.addToTotal} />))}
-                <Row justify='end' gutter={32}>
-                    <Col>
+                <Row justify='end' gutter={32} style={{ marginTop: '16px' }}>
+                    <Col style={{ maxWidth: '70%' }}>
                         <Title level={4}>{`Shipping:`}</Title>
                     </Col>
                     <Col>

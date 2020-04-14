@@ -1,8 +1,9 @@
 import React from 'react';
 import { CardElement } from '@stripe/react-stripe-js';
-
 import { Row, Col, Steps, Button, Form, Result, Spin } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { removeAll } from '../actions/actions';
 
 import Shipping from './checkout_steps/Shipping';
 import Billing from './checkout_steps/Billing';
@@ -86,6 +87,9 @@ class CheckoutForm extends React.Component {
             this.setState({ error: true, loading: false, errorMsg: error.message });
         } else {
             if (paymentIntent.status === 'succeeded') {
+                // clear cart
+                this.props.dispatch(removeAll());
+                // set complete state to true
                 this.setState({ purchaseComplete: true, loading: false });
             }
         };
@@ -140,7 +144,7 @@ class CheckoutForm extends React.Component {
                             <h1>Checkout</h1>
                             <div style={{ margin: '40px 12.5% 50px', textAlign: 'center' }}>
                                 <Spin
-                                    spinning={this.state.loading} tip="Processing...">
+                                    spinning={this.state.loading} tip='Processing...'>
                                     <Steps current={this.state.current}>
                                         {
                                             steps.map(item => {
@@ -154,7 +158,7 @@ class CheckoutForm extends React.Component {
                                         {...formItemLayout}
                                         onFinish={this.submit}
                                     >
-                                        <div className="steps-content" style={{ margin: '40px 0' }}>
+                                        <div className='steps-content' style={{ margin: '40px 0' }}>
                                             {steps.map(({ title, content }, i) => (
                                                 <div
                                                     key={title}
@@ -165,16 +169,16 @@ class CheckoutForm extends React.Component {
                                             ))
                                             }
                                         </div>
-                                        <div className="steps-action">
+                                        <div className='steps-action'>
                                             {this.state.current < steps.length - 1 && (
-                                                <Button type="primary" onClick={() => this.next()}>
+                                                <Button type='primary' onClick={() => this.next()}>
                                                     Next
                                                 </Button>
                                             )}
                                             {this.state.current === steps.length - 1 && (
                                                 <Button
-                                                    type="primary"
-                                                    htmlType="submit"
+                                                    type='primary'
+                                                    htmlType='submit'
                                                     disabled={!stripe}
                                                 >
                                                     Place Order
@@ -224,5 +228,7 @@ class CheckoutForm extends React.Component {
         );
     }
 }
+
+CheckoutForm = connect()(CheckoutForm);
 
 export default withRouter(CheckoutForm);

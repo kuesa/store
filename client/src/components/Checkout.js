@@ -4,7 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
 
 // don't worry - this is a public API key.
-const stripePromise = loadStripe('pk_test_H11hfDxxxCmMMMQWwDGV7bXy00wOk4eBK3');
+const stripePromise = loadStripe('pk_live_iryttCVg5Yi3eiJrcm7QuUyc00LOkZLI8l');
 
 class Checkout extends React.Component {
     render() {

@@ -101,6 +101,15 @@ const item_sheet = {
         description: "Modeled after J. Eichentopf, available in A=415 by default, but on request can be tuned to A=440.",
         base_price: 1750,
         wood_prices: [0, 0, 0, 0, 125, 125, 125, 0, 0, 0]
+    },
+    9: {
+        name: "Photo Print",
+        description: "8x10 print on Fujifilm Crystal Archive Paper.",
+        base_price: 20,
+        modifiers: [
+            { name: 'Borderless', price: 0 },
+            { name: 'Bordered', price: 0 }
+        ]
     }
 };
 

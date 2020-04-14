@@ -8,12 +8,12 @@ let AddItem = (props) => {
     return (
         <div>
             <form
-                onSubmit={ e => {
+                onSubmit={e => {
                     e.preventDefault();
                     props.dispatch(addItem(props.sku, 1));
                 }}
             >
-                <Button type="primary" htmlType="submit">Add To Cart</Button>
+                <Button type='primary' htmlType='submit'>Add To Cart</Button>
             </form>
         </div>
     );

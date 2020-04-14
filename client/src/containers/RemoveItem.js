@@ -8,12 +8,12 @@ let RemoveItem = (props) => {
     return (
         <div>
             <form
-                onSubmit={ e => {
+                onSubmit={e => {
                     e.preventDefault();
                     props.dispatch(removeItem(props.sku));
                 }}
             >
-                <Button type="primary" htmlType="submit">Remove Item</Button>
+                <Button type='primary' htmlType='submit'>Remove Item</Button>
             </form>
         </div>
     );
